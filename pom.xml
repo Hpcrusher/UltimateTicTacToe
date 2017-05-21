@@ -18,8 +18,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>TimeTaker</name>
-	<description>Time traking system</description>
+	<name>Ultimate Tic Tac Toe</name>
+	<description>TTT</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
