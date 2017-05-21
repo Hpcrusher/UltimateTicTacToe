@@ -1,0 +1,69 @@
+/*
+    home-design-config
+    @author Volker Mertens
+    @version 1.0
+ */
+
+.menu {
+  padding: 15px;
+  list-style: none;
+ 
+}
+
+.menu li {
+  cursor: pointer;
+  height: 120px; 
+  width: 200px;
+  margin: 10px 0 0 10px;
+  background: #ddd
+
+} 
+
+.menu li {
+  position: relative;
+  float: left
+}
+
+body {
+  padding-top: 0px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+}
+
+.portfolio-item {
+  margin-bottom: 25px;
+}
+
+
+.kachel{
+    position:relative;
+    color:inherit;
+    display: table-cell;
+    font-family: inherit;
+    font-style: normal;
+    padding:2px;
+    margin-top:5px;
+    margin-bottom:5px;
+    text-decoration: none;
+    background-color: #59B2E0;
+    height: 150px;
+    width: 100pc;
+    text-align: center;
+    vertical-align: middle;
+    cursor:pointer;
+    text-shadow: -1px -1px 1px lightgrey,  1px -1px 1px lightgrey,  -1px 1px 1px lightgrey,  1px 1px 1px lightgrey;
+}
+
+.kachel .title{
+    font-size:23pt;
+    word-wrap: break-word;
+}
+
+.kachel .father-title{
+    font-size:12pt;
+    word-wrap: break-word;
+}
+.kachel:hover{
+    text-decoration: none;
+}
+.active{
+
+}

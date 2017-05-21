@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017 David Liebl, Martin Geßenich, Sebastian Pettirsch, Christian Rehaag, Volker Mertens
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ~
+  -->
+
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:fragment="head" th:remove="tag">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><!-- for Bootstrap -->
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/><!-- for Bootstrap -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/><!-- default header name is X-CSRF-TOKEN -->
+    <script th:attr="data-main=@{/js/requireConfig.js}" th:src="@{/js/3rd/require.min.js}"></script>
+    <script th:src="@{/js/require.js}"></script>
+    <script th:inline="javascript">
+        requireDomReady(['jquery', 'connector', 'bootstrap', 'ttTimer'], function ($, CO) {
+            $('#logoutBtn').click(function () {
+                CO.post({
+                    url: /*[[@{/logout}]]*/'',
+                    success: function () {
+                        window.location=/*[[@{/login?logout}]]*/'';
+                    }
+                });
+            });
+
+            setTimeout(function () {
+                location.reload(true);
+            }, 630000);
+
+            $('.pageside').fadeIn();
+        });
+    </script>
+    <link rel="stylesheet" th:href="@{/css/head.css}"/>
+    <link rel="stylesheet" th:href="@{/css/components.css}"/>
+</head>
+<body>
+    <th:block th:fragment="header">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarCollapse" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" th:href="@{/}">Ultimate Tic Tac Toe</a>
+                </div>
+                <div  class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a class="dropdown-toggle headerPointer" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <th:block th:if="${#locale.toString() == 'en_US'}">
+                                    <img th:src="@{/img/gb.svg}"/>
+                                </th:block>
+                                <th:block th:if="${#locale.toString() == 'de_DE'}">
+                                    <img th:src="@{/img/de.svg}"/>
+                                </th:block>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menuH" aria-labelledby="dropdownMenu1">
+                                <li>
+                                    <a th:href="@{?mylocale=en_US}"><img th:src="@{/img/gb.svg}"/></a>
+                                </li>
+                                <li>
+                                    <a th:href="@{?mylocale=de_DE}"><img th:src="@{/img/de.svg}"/></a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a id="logoutBtn" class="headerPointer"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </th:block>
+</body>
+</html>
