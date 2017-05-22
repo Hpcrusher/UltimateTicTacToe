@@ -19,7 +19,7 @@
     <script th:attr="data-main=@{/js/requireConfig.js}" th:src="@{/js/3rd/require.min.js}"></script>
     <script th:src="@{/js/require.js}"></script>
     <script th:inline="javascript">
-        requireDomReady(['jquery', 'connector', 'bootstrap', 'ttTimer'], function ($, CO) {
+        requireDomReady(['jquery', 'connector', 'bootstrap'], function ($, CO) {
             $('#logoutBtn').click(function () {
                 CO.post({
                     url: /*[[@{/logout}]]*/'',

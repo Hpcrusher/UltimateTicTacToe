@@ -21,7 +21,6 @@ requirejs.config({
         bootstrap: '3rd/bootstrap.min',
         colorpicker: '3rd/bootstrap-colorpicker.min',
         jsRender: '3rd/jsrender.min',
-        flipclock: '3rd/flipclock.min',
         datetime: '3rd/moment',
         datepicker: '3rd/bootstrap-datepicker.min',
         dp_language: 'locales/bootstrap-datepicker.de.min',
@@ -34,19 +33,18 @@ requirejs.config({
 
         // Wrapper
         connnector: 'connector',
-        ttToast: 'components/ttToast',
-        ttSelect: 'components/ttSelect',
-        ttTimer: 'components/ttTimer',
-        ttItemTree: 'components/ttItemTree'
+        toast: 'components/toast',
+        select: 'components/select',
+        webSocketConnection: 'components/webSocketConnection'
     },
     shim: {
-        jquery: { "exports": "$"},
-        stomp: {"exports": "Stomp"},
-        sockjs: {"exports": "SockJS"},
+        jquery: {exports: '$'},
+        stomp: {exports: 'Stomp'},
+        sockjs: {exports: 'SockJS'},
         bootstrap: ['jquery'],
         colorpicker: ['jquery', 'bootstrap'],
         jsRender: ['jquery'],
-        datetime: { "exports": "moment"},
+        datetime: {exports: 'moment'},
         datepicker: ['jquery', 'bootstrap'],
         dp_language: ['jquery', 'datepicker'],
 
@@ -57,9 +55,8 @@ requirejs.config({
 
         // Wrapper
         connector: ['jquery'],
-        ttToast: ['jquery', 'jquery_toast'],
-        ttSelect: ['jquery', 'select2'],
-        ttTimer: ['jquery', 'flipclock'],
-        ttItemTree: ['jquery', 'connector']
+        toast: ['jquery', 'jquery_toast'],
+        select: ['jquery', 'select2'],
+        webSocketConnection: {deps:['stomp', 'sockjs'], exports: 'WSC'}
     }
 });

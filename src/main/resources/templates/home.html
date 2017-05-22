@@ -16,59 +16,17 @@
     <title th:text="#{home.title}"></title>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        requireDomReady(['jquery', 'connector', 'sockjs', 'stomp', 'bootstrap', 'ttToast', 'jsRender'], function($, CO, SockJS, Stomp) {
+        requireDomReady(['jquery', 'connector', 'webSocketConnection', 'bootstrap', 'toast', 'jsRender'], function($, CO, WSC) {
 
+            var gameLogic = function (data) {
 
-            var stompClient = null;
+            };
 
-            function setConnected(connected) {
-                $("#connect").prop("disabled", connected);
-                $("#disconnect").prop("disabled", !connected);
-                if (connected) {
-                    $("#conversation").show();
-                }
-                else {
-                    $("#conversation").hide();
-                }
-                $("#greetings").html("");
-            }
-
-            function connect() {
-                var socket = new SockJS('/gs-guide-websocket');
-                stompClient = Stomp.over(socket);
-                stompClient.connect({}, function (frame) {
-                    setConnected(true);
-                    console.log('Connected: ' + frame);
-                    stompClient.subscribe('/topic/greetings', function (greeting) {
-                        showGreeting(JSON.parse(greeting.body).content);
-                    });
-                });
-            }
-
-            function disconnect() {
-                if (stompClient != null) {
-                    stompClient.disconnect();
-                }
-                setConnected(false);
-                console.log("Disconnected");
-            }
-
-            function sendName() {
-                stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
-            }
-
-            function showGreeting(message) {
-                $("#greetings").append("<tr><td>" + message + "</td></tr>");
-            }
-
-            $(function () {
-                $("form").on('submit', function (e) {
-                    e.preventDefault();
-                });
-                $( "#connect" ).click(function() { connect(); });
-                $( "#disconnect" ).click(function() { disconnect(); });
-                $( "#send" ).click(function() { sendName(); });
+            WSC.connect('/tictactoe', '/back', gameLogic, function () {
+                WSC.sendMessage('/app/hello', {name: 'Test'});
             });
+
+
 
             function updateBoard() {
                 $('#tictactoeContainer').empty();
@@ -103,7 +61,7 @@
                 <div class="row">
                     {{for ~y=#index}}
                         <div class="col-xs-4">
-                            <button class="game-btn" data-x="{{:~x}}" data-y="{{:~y}}" style="width: 40px;">
+                            <button class="game-btn" data-x="{{:~x}}" data-y="{{:~y}}" style="width: 40px;" {{if #data != 0}}disabled="disabled"{{/if}}>
                                 {{if #data == 1}}
                                     <span>X</span>
                                 {{else #data == -1}}
