@@ -1,8 +1,12 @@
 package hpcrusher.web.controller;
 
 import hpcrusher.model.Game;
+import hpcrusher.model.Request;
+import hpcrusher.model.Response;
 import hpcrusher.repository.GameRepository;
 import org.springframework.http.MediaType;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,9 +28,8 @@ public class GameController {
     }
 
     @RequestMapping(value = "new", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Game newGame() {
-        final Integer[][] board = new Integer[9][9];
+        final int[][] board = new int[9][9];
         for (int i = 0;i< board.length;i++) {
             Arrays.fill(board[i], 0);
 
@@ -40,4 +43,11 @@ public class GameController {
     public Game getGameAsJson(UUID id) {
         return gameRepository.findOne(id);
     }
+
+    @MessageMapping("/hello")
+    @SendTo("/back")
+    public Response greeting(Request message) throws Exception {
+        return new Response();
+    }
+
 }

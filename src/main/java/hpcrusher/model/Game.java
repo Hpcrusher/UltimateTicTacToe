@@ -20,10 +20,13 @@ public class Game extends AbstractIdEntity {
     private Person player2;
 
     @Column(name = "board")
-    private Integer[][] board;
+    private int[][] board = new int[9][9];
 
     @Column(name = "p1_turn")
-    private boolean p1Turn;
+    private boolean p1Turn = true;
+
+    @Column(name = "next_valid_quadrant")
+    private int nextValidQuadrant = -1;
 
     public Person getPlayer1() {
         return player1;
@@ -41,11 +44,11 @@ public class Game extends AbstractIdEntity {
         this.player2 = player2;
     }
 
-    public Integer[][] getBoard() {
+    public int[][] getBoard() {
         return board;
     }
 
-    public void setBoard(Integer[][] board) {
+    public void setBoard(int[][] board) {
         this.board = board;
     }
 
@@ -61,11 +64,19 @@ public class Game extends AbstractIdEntity {
         return new GameBuilder();
     }
 
+    public int getNextValidQuadrant() {
+        return nextValidQuadrant;
+    }
+
+    public void setNextValidQuadrant(int nextValidQuadrant) {
+        this.nextValidQuadrant = nextValidQuadrant;
+    }
+
     public static final class GameBuilder {
         protected UUID id;
         private Person player1;
         private Person player2;
-        private Integer[][] board;
+        private int[][] board;
         private boolean p1Turn;
 
         private GameBuilder() {
@@ -81,7 +92,7 @@ public class Game extends AbstractIdEntity {
             return this;
         }
 
-        public GameBuilder withBoard(Integer[][] board) {
+        public GameBuilder withBoard(int[][] board) {
             this.board = board;
             return this;
         }

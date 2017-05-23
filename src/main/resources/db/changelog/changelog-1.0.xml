@@ -104,6 +104,7 @@
             </column>
             <column name="p1_turn" type="BOOLEAN"/>
             <column name="board" type="CLOB"/>
+            <column name="next_valid_quadrant" type="${type.int}"/>
         </createTable>
     </changeSet>
 
