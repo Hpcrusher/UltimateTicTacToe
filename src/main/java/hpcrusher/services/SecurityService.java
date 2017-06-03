@@ -12,27 +12,15 @@ package hpcrusher.services;
 
 import hpcrusher.model.Person;
 import hpcrusher.model.User;
-import hpcrusher.repository.UserRepository;
 import hpcrusher.security.CustomUserDetails;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 
 
 /**
  * @author David Liebl
  */
-
-@Service
 public class SecurityService {
-
-    private final UserRepository userRepository;
-
-    @Autowired
-    public SecurityService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     private static CustomUserDetails getCustomUserDetails() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -59,10 +47,6 @@ public class SecurityService {
             return null;
         }
         return getLoggedInUser().getPerson();
-    }
-
-    public String getUsername(Person person) {
-        userRepository.findOne(person.)
     }
 
 }

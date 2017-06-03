@@ -33,7 +33,6 @@ public class HomeController {
 
     @RequestMapping(value="/impressum",method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getImpressumAsHtml() {
-
         return new ModelAndView("impressum");
     }
 

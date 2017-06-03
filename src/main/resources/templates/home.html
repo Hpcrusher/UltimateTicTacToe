@@ -17,34 +17,84 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         requireDomReady(['jquery', 'connector', 'webSocketConnection', 'bootstrap', 'toast', 'jsRender'], function($, CO, WSC) {
+            var joinGameUrl = /*[[@{/game/{id}/join}]]*/'';
+            var newGameUrl = /*[[@{/game/new}]]*/'';
+            var $tictactoeContainer = $('#tictactoeContainer');
 
-            var gameLogic = function (data) {
-                console.log(data);
+            var buildBoard = function (game) {
+                $tictactoeContainer.empty();
+                var render = $('#tictactoeBoard').render(game);
+                $tictactoeContainer.append(render);
+                $('.game-btn').click(function () {
+                    WSC.sendMessage('/app/move', {
+                        bigField: $(this).data('x'),
+                        smallField: $(this).data('y'),
+                        gameId: $('#gameId').data('id')
+                    });
+                });
             };
 
-            function updateBoard() {
-                $('#tictactoeContainer').empty();
+            var winHandler = function (data) {
+
+            };
+
+            var errorHandling = function (data) {
+
+            };
+
+            function startNewGame() {
                 CO.get({
-                    url: /*[[@{/game/new}]]*/'',
+                    url: newGameUrl,
+                    success: function (game) {
+                        buildBoard(game);
+                        establishConnections();
+                    }
+                });
+            }
+
+            function joinGame($btn) {
+                CO.get({
+                    url: joinGameUrl.replace('{id}', $btn.data('id')),
+                    success: function (game) {
+                        buildBoard(game);
+                        establishConnections();
+                    }
+                })
+            }
+
+            function establishConnections() {
+                WSC.connect('/tictactoe', '/user/queue/game', buildBoard, function () {
+                    //notify user about stuff or so ...
+                });
+                WSC.connect('/tictactoe', '/user/queue/notValid', errorHandling, function () {
+                    //notify user about stuff or so ...
+                });
+                WSC.connect('/tictactoe', '/user/queue/winner', winHandler, function () {
+                    //notify user about stuff or so ...
+                });
+            }
+
+            function buildLobby() {
+                CO.get({
+                    url: /*[[@{game/lobby}]]*/'',
                     success: function (data) {
-                        var render = $('#tictactoeBoard').render(data);
-                        $('#tictactoeContainer').append(render);
-                        $('.game-btn').click(function () {
-                            console.log('test');
-                            WSC.sendMessage('/app/hello', {
-                                bigField: $(this).data('x'),
-                                smallField: $(this).data('y'),
-                                gameId: $('#gameId').data('id')
+                        var render = $('#lobbyTemplate').render(data);
+                        $('#lobbyContainer').append(render);
+                        $('#lobbyContainer button').each(function () {
+                            var $btn = $(this);
+                            $btn.click(function () {
+                                $('#lobbyContainer').empty();
+                                joinGame($btn);
                             });
                         });
                     }
                 });
             }
 
-            WSC.connect('/tictactoe', '/back', gameLogic, function () {
-                updateBoard();
+            buildLobby();
+            $('#newGameBtn').click(function () {
+                startNewGame();
             });
-
         });
         /*]]>*/
     </script>
@@ -71,6 +121,9 @@
             </div>
         {{/for}}
     </script>
+    <script id="lobbyTemplate" type="text/x-jsrender">
+        <button class="btn btn-default" data-id="{{:#data}}">{{:#index}}</button>
+    </script>
 
     <link rel="stylesheet" th:href="@{/css/home.css}"/>
 </head>
@@ -82,6 +135,8 @@
         </div>
     </div>
     <div class="row">
+        <button id="newGameBtn">Start new Game</button>
+        <div id="lobbyContainer"></div>
         <div id="tictactoeContainer"></div>
     </div>
 </div>

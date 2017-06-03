@@ -28,6 +28,9 @@ public class Game extends AbstractIdEntity {
     @Column(name = "next_valid_quadrant")
     private int nextValidQuadrant = -1;
 
+    @Column(name = "p1_winner")
+    private Boolean p1Winner;
+
     public Person getPlayer1() {
         return player1;
     }
@@ -72,12 +75,21 @@ public class Game extends AbstractIdEntity {
         this.nextValidQuadrant = nextValidQuadrant;
     }
 
+    public Boolean isP1Winner() {
+        return p1Winner;
+    }
+
+    public void setP1Winner(Boolean p1Winner) {
+        this.p1Winner = p1Winner;
+    }
+
     public static final class GameBuilder {
         protected UUID id;
         private Person player1;
         private Person player2;
         private int[][] board;
         private boolean p1Turn;
+        private Boolean p1Winner;
 
         private GameBuilder() {
         }
@@ -107,6 +119,11 @@ public class Game extends AbstractIdEntity {
             return this;
         }
 
+        public GameBuilder withP1Winner(Boolean p1Winner) {
+            this.p1Winner = p1Winner;
+            return this;
+        }
+
         public Game build() {
             Game game = new Game();
             game.setId(id);
@@ -114,6 +131,7 @@ public class Game extends AbstractIdEntity {
             game.setPlayer1(player1);
             game.setPlayer2(player2);
             game.setP1Turn(p1Turn);
+            game.setP1Winner(p1Winner);
             return game;
         }
     }

@@ -101,8 +101,9 @@
                 <constraints referencedTableName="person" referencedColumnNames="id" foreignKeyName="game_player2_fk"/>
             </column>
             <column name="p1_turn" type="BOOLEAN"/>
-            <column name="board" type="CLOB"/>
+            <column name="board" type="${type.string-1000}"/>
             <column name="next_valid_quadrant" type="${type.string-100}"/>
+            <column name="p1_winner" type="BOOLEAN"/>
         </createTable>
     </changeSet>
 
