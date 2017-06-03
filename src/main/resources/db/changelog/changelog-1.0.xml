@@ -95,16 +95,14 @@
                 <constraints primaryKey="true" primaryKeyName="game_pk" nullable="false" unique="true"/>
             </column>
             <column name="player1_id" type="${type.id}">
-                <constraints referencedTableName="person" referencedColumnNames="id" foreignKeyName="game_player1_fk"
-                             nullable="false" unique="true"/>
+                <constraints referencedTableName="person" referencedColumnNames="id" foreignKeyName="game_player1_fk" nullable="false"/>
             </column>
             <column name="player2_id" type="${type.id}">
-                <constraints referencedTableName="person" referencedColumnNames="id" foreignKeyName="game_player2_fk"
-                             nullable="false" unique="true"/>
+                <constraints referencedTableName="person" referencedColumnNames="id" foreignKeyName="game_player2_fk"/>
             </column>
             <column name="p1_turn" type="BOOLEAN"/>
             <column name="board" type="CLOB"/>
-            <column name="next_valid_quadrant" type="${type.int}"/>
+            <column name="next_valid_quadrant" type="${type.string-100}"/>
         </createTable>
     </changeSet>
 

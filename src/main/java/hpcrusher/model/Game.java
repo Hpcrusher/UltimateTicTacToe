@@ -20,10 +20,10 @@ public class Game extends AbstractIdEntity {
     private Person player2;
 
     @Column(name = "board")
-    private int[][] board = new int[9][9];
+    private int[][] board;
 
     @Column(name = "p1_turn")
-    private boolean p1Turn = true;
+    private boolean p1Turn;
 
     @Column(name = "next_valid_quadrant")
     private int nextValidQuadrant = -1;

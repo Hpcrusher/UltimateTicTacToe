@@ -19,14 +19,8 @@
         requireDomReady(['jquery', 'connector', 'webSocketConnection', 'bootstrap', 'toast', 'jsRender'], function($, CO, WSC) {
 
             var gameLogic = function (data) {
-
+                console.log(data);
             };
-
-            WSC.connect('/tictactoe', '/back', gameLogic, function () {
-                WSC.sendMessage('/app/hello', {name: 'Test'});
-            });
-
-
 
             function updateBoard() {
                 $('#tictactoeContainer').empty();
@@ -35,33 +29,33 @@
                     success: function (data) {
                         var render = $('#tictactoeBoard').render(data);
                         $('#tictactoeContainer').append(render);
-                        var url = /*[[@{/game/{id}}]]*/'';
                         $('.game-btn').click(function () {
-                            CO.post({
-                                url: url.replace('{id}', data.id),
-                                data: {
-                                    x: $(this).data('x'),
-                                    y: $(this).data('y')
-                                },
-                                success: function () {
-                                    $(this).val(data.p1Turn?'X':'O')
-                                }
+                            console.log('test');
+                            WSC.sendMessage('/app/hello', {
+                                bigField: $(this).data('x'),
+                                smallField: $(this).data('y'),
+                                gameId: $('#gameId').data('id')
                             });
                         });
                     }
                 });
             }
 
+            WSC.connect('/tictactoe', '/back', gameLogic, function () {
+                updateBoard();
+            });
+
         });
         /*]]>*/
     </script>
     <script id="tictactoeBoard" type="text/x-jsrender">
-        {{for board ~x=#index}}
+        <div id="gameId" data-id="{{:id}}">
+        {{for board}}
             <div class="col-xs-4">
                 <div class="row">
-                    {{for ~y=#index}}
+                    {{for}}
                         <div class="col-xs-4">
-                            <button class="game-btn" data-x="{{:~x}}" data-y="{{:~y}}" style="width: 40px;" {{if #data != 0}}disabled="disabled"{{/if}}>
+                            <button class="game-btn btn btn-default" data-x="{{:#getIndex()}}" data-y="{{:#index}}" style="width: 40px;" {{if #data != 0}}disabled="disabled"{{/if}}>
                                 {{if #data == 1}}
                                     <span>X</span>
                                 {{else #data == -1}}
@@ -82,45 +76,6 @@
 </head>
 <body>
 <div layout:fragment="content">
-
-    <div id="main-content" class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <form class="form-inline">
-                    <div class="form-group">
-                        <label for="connect">WebSocket connection:</label>
-                        <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                        <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                        </button>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-6">
-                <form class="form-inline">
-                    <div class="form-group">
-                        <label for="name">What is your name?</label>
-                        <input type="text" id="name" class="form-control" placeholder="Your name here...">
-                    </div>
-                    <button id="send" class="btn btn-default" type="submit">Send</button>
-                </form>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <table id="conversation" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Greetings</th>
-                    </tr>
-                    </thead>
-                    <tbody id="greetings">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        </form>
-    </div>
-
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header"><span th:text="#{home.title}"></span></h1>

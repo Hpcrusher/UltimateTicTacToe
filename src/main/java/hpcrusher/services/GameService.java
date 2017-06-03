@@ -1,6 +1,7 @@
 package hpcrusher.services;
 
 import hpcrusher.model.Game;
+import hpcrusher.model.Person;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,7 +11,12 @@ import org.springframework.stereotype.Service;
 public class GameService {
 
     public boolean isMoveValid(Game game, int bigField, int smallField) {
-        return !(game.getNextValidQuadrant() != bigField && game.getNextValidQuadrant() != -1) && game.getBoard()[bigField][smallField] == 0;
+        if (!(game.getNextValidQuadrant() != bigField && game.getNextValidQuadrant() != -1)) {
+            if (game.getBoard()[bigField][smallField] == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public int checkForWin(Game game) {
