@@ -26,7 +26,7 @@
         }
     }
 
-    $.ttToast = function (options) {
+    $.notification = function (options) {
         var settings = $.extend(getDefaultSettings(), options);
         $.toast(settings);
     }

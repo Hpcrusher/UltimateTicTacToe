@@ -10,6 +10,8 @@
 
 package hpcrusher.model;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.UUID;
@@ -20,6 +22,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "person")
+@Proxy(lazy = false)
 public class Person extends AbstractIdEntity {
 
 

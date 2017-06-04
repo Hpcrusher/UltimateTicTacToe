@@ -11,6 +11,7 @@
 package hpcrusher.model;
 
 import hpcrusher.util.EncryptPassword;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "user")
+@Proxy(lazy = false)
 public class User extends AbstractIdEntity {
 
     @Column(name = "username")

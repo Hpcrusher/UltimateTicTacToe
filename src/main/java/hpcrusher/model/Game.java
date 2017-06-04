@@ -1,5 +1,7 @@
 package hpcrusher.model;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import java.util.UUID;
 
@@ -9,6 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "game")
+@Proxy(lazy = false)
 public class Game extends AbstractIdEntity {
 
     @ManyToOne(targetEntity = Person.class)

@@ -7,11 +7,11 @@ define(['stomp', 'sockjs'], function (Stomp, SockJS) {
     var stompClient = null;
     var connected = false;
 
-    function _connect(socketName, subscribeTo, callback, finalExecution) {
+    function _connect(headers, socketName, subscribeTo, callback, finalExecution) {
         var socket = new SockJS(socketName);
         stompClient = Stomp.over(socket);
         stompClient.debug = function () {};
-        stompClient.connect({}, function (frame) {
+        stompClient.connect(headers, function (frame) {
             connected = true;
             console.log('Connected: ' + frame);
             stompClient.subscribe(subscribeTo, function (greeting) {

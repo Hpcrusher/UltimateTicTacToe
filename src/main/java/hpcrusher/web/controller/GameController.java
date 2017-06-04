@@ -43,7 +43,7 @@ public class GameController {
         this.nameResolverService = nameResolverService;
     }
 
-    @RequestMapping(value = "new", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "new", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Game newGame() {
         final int[][] board = new int[9][9];
         for (int[] aBoard : board) {
@@ -73,7 +73,7 @@ public class GameController {
         if (loggedInPerson != null && (loggedInPerson.equals(game.getPlayer1()) && game.isP1Turn() || loggedInPerson.equals(game.getPlayer2()) && !game.isP1Turn())) {
 
             if (!gameService.isMoveValid(game, request.getBigField(), request.getSmallField())) {
-                simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(loggedInPerson), "/queue/notValid", null);
+                simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(loggedInPerson), "/queue/notValid", "Move not Valid");
             }
             final int winner = gameService.checkForWin(game);
             switch (winner) {
@@ -115,7 +115,7 @@ public class GameController {
         return gameRepository.findAll().stream().map(AbstractIdEntity::getId).collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "{id}/join", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{id}/join", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Game joinGame(@PathVariable UUID id) {
         Game game = gameRepository.findOne(id);
         if (game == null) {

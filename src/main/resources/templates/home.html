@@ -19,6 +19,12 @@
         requireDomReady(['jquery', 'connector', 'webSocketConnection', 'bootstrap', 'toast', 'jsRender'], function($, CO, WSC) {
             var joinGameUrl = /*[[@{/game/{id}/join}]]*/'';
             var newGameUrl = /*[[@{/game/new}]]*/'';
+
+            var headerName = /*[[${_csrf.headerName}]]*/'';
+            var token = /*[[${_csrf.token}]]*/'';
+            var headers = {};
+            headers[headerName] = token;
+
             var $tictactoeContainer = $('#tictactoeContainer');
 
             var buildBoard = function (game) {
@@ -39,11 +45,11 @@
             };
 
             var errorHandling = function (data) {
-
+                $.notification({text: data})
             };
 
             function startNewGame() {
-                CO.get({
+                CO.post({
                     url: newGameUrl,
                     success: function (game) {
                         buildBoard(game);
@@ -53,7 +59,7 @@
             }
 
             function joinGame($btn) {
-                CO.get({
+                CO.post({
                     url: joinGameUrl.replace('{id}', $btn.data('id')),
                     success: function (game) {
                         buildBoard(game);
@@ -63,13 +69,13 @@
             }
 
             function establishConnections() {
-                WSC.connect('/tictactoe', '/user/queue/game', buildBoard, function () {
+                WSC.connect(headers, '/tictactoe', '/user/queue/game', buildBoard, function () {
                     //notify user about stuff or so ...
                 });
-                WSC.connect('/tictactoe', '/user/queue/notValid', errorHandling, function () {
+                WSC.connect(headers, '/tictactoe', '/user/queue/notValid', errorHandling, function () {
                     //notify user about stuff or so ...
                 });
-                WSC.connect('/tictactoe', '/user/queue/winner', winHandler, function () {
+                WSC.connect(headers, '/tictactoe', '/user/queue/winner', winHandler, function () {
                     //notify user about stuff or so ...
                 });
             }
