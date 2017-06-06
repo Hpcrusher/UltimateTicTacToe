@@ -70,7 +70,7 @@
 
             function establishConnections() {
                 WSC.connect(headers, '/tictactoe', '/user/queue/game', buildBoard, function () {
-                    //notify user about stuff or so ...
+                    console.log("Connected")
                 });
                 WSC.connect(headers, '/tictactoe', '/user/queue/notValid', errorHandling, function () {
                     //notify user about stuff or so ...
@@ -111,7 +111,7 @@
                 <div class="row">
                     {{for}}
                         <div class="col-xs-4">
-                            <button class="game-btn btn btn-default" data-x="{{:#getIndex()}}" data-y="{{:#index}}" style="width: 40px;" {{if #data != 0}}disabled="disabled"{{/if}}>
+                            <button class="game-btn btn btn-default" data-x="{{:#parent.getIndex()}}" data-y="{{:#index}}" style="width: 40px;" {{if #data != 0}}disabled="disabled"{{/if}}>
                                 {{if #data == 1}}
                                     <span>X</span>
                                 {{else #data == -1}}

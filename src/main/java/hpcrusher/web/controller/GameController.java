@@ -2,6 +2,7 @@ package hpcrusher.web.controller;
 
 import hpcrusher.exception.ValidationRuntimeException;
 import hpcrusher.model.*;
+import hpcrusher.model.Error;
 import hpcrusher.repository.GameRepository;
 import hpcrusher.services.GameService;
 import hpcrusher.services.NameResolverService;
@@ -73,7 +74,7 @@ public class GameController {
         if (loggedInPerson != null && (loggedInPerson.equals(game.getPlayer1()) && game.isP1Turn() || loggedInPerson.equals(game.getPlayer2()) && !game.isP1Turn())) {
 
             if (!gameService.isMoveValid(game, request.getBigField(), request.getSmallField())) {
-                simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(loggedInPerson), "/queue/notValid", "Move not Valid");
+                simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(loggedInPerson), "/queue/notValid", new Error("Move not Valid"));
             }
             final int winner = gameService.checkForWin(game);
             switch (winner) {

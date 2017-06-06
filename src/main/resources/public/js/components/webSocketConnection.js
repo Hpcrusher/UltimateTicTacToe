@@ -10,10 +10,9 @@ define(['stomp', 'sockjs'], function (Stomp, SockJS) {
     function _connect(headers, socketName, subscribeTo, callback, finalExecution) {
         var socket = new SockJS(socketName);
         stompClient = Stomp.over(socket);
-        stompClient.debug = function () {};
+        // stompClient.debug = function () {};
         stompClient.connect(headers, function (frame) {
             connected = true;
-            console.log('Connected: ' + frame);
             stompClient.subscribe(subscribeTo, function (greeting) {
                 callback(JSON.parse(greeting.body).content);
             });
@@ -27,7 +26,6 @@ define(['stomp', 'sockjs'], function (Stomp, SockJS) {
             stompClient = null;
         }
         connected = false;
-        console.log("Disconnected");
     }
 
     function _sendMessage(destination, data) {

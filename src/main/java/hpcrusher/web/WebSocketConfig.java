@@ -6,7 +6,6 @@ import org.springframework.security.config.annotation.web.messaging.MessageSecur
 import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 
 /**
@@ -27,14 +26,14 @@ public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfi
     }
 
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
-        config.setApplicationDestinationPrefixes("/app");
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.enableSimpleBroker("/topic", "/queue");
+        registry.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/tictactoe").setHandshakeHandler(new DefaultHandshakeHandler()).withSockJS();
+        registry.addEndpoint("/tictactoe").withSockJS();
     }
 
     @Override
