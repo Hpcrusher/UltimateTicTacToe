@@ -26,6 +26,7 @@
             headers[headerName] = token;
 
             var $tictactoeContainer = $('#tictactoeContainer');
+            var $lobbyContainer = $('#lobbyContainer');
 
             var buildBoard = function (game) {
                 $tictactoeContainer.empty();
@@ -37,6 +38,9 @@
                         smallField: $(this).data('y'),
                         gameId: $('#gameId').data('id')
                     });
+                    $tictactoeContainer.find('button').each(function () {
+                        $(this).prop('disabled', true);
+                    })
                 });
             };
 
@@ -69,14 +73,16 @@
             }
 
             function establishConnections() {
-                WSC.connect(headers, '/tictactoe', '/user/queue/game', buildBoard, function () {
-                    console.log("Connected")
-                });
-                WSC.connect(headers, '/tictactoe', '/user/queue/notValid', errorHandling, function () {
-                    //notify user about stuff or so ...
-                });
-                WSC.connect(headers, '/tictactoe', '/user/queue/winner', winHandler, function () {
-                    //notify user about stuff or so ...
+                WSC.connect(headers, '/tictactoe', function (stompClient) {
+                    stompClient.subscribe('/user/queue/game', function (greeting) {
+                        buildBoard(JSON.parse(greeting.body).content);
+                    });
+                    stompClient.subscribe('/user/queue/notValid', function (greeting) {
+                        errorHandling(JSON.parse(greeting.body).content);
+                    });
+                    stompClient.subscribe('/user/queue/winner', function (greeting) {
+                        winHandler(JSON.parse(greeting.body).content);
+                    });
                 });
             }
 
@@ -85,8 +91,8 @@
                     url: /*[[@{game/lobby}]]*/'',
                     success: function (data) {
                         var render = $('#lobbyTemplate').render(data);
-                        $('#lobbyContainer').append(render);
-                        $('#lobbyContainer button').each(function () {
+                        $lobbyContainer.append(render);
+                        $lobbyContainer.find('button').each(function () {
                             var $btn = $(this);
                             $btn.click(function () {
                                 $('#lobbyContainer').empty();
@@ -107,11 +113,11 @@
     <script id="tictactoeBoard" type="text/x-jsrender">
         <div id="gameId" data-id="{{:id}}">
         {{for board}}
-            <div class="col-xs-4">
+            <div class="col-xs-4" style="max-width: 210px;{{if #index % 2 == 0}}background-color: #5F021F;{{else}}background-color: rgba(218, 129, 182, 0.75);{{/if}}">
                 <div class="row">
                     {{for}}
-                        <div class="col-xs-4">
-                            <button class="game-btn btn btn-default" data-x="{{:#parent.getIndex()}}" data-y="{{:#index}}" style="width: 40px;" {{if #data != 0}}disabled="disabled"{{/if}}>
+                        <div class="col-xs-4 text-center" style="max-width: 70px;">
+                            <button class="game-btn btn btn-default" data-x="{{:#parent.getIndex()}}" data-y="{{:#index}}" style="width: 40px; margin-top: 4px;margin-bottom: 4px;background-color: white;" {{if #data != 0}}disabled="disabled"{{/if}}>
                                 {{if #data == 1}}
                                     <span>X</span>
                                 {{else #data == -1}}
@@ -122,13 +128,12 @@
                             </button>
                         </div>
                     {{/for}}
-                    <span>----------------------------------------------------------------------</span>
                 </div>
             </div>
         {{/for}}
     </script>
     <script id="lobbyTemplate" type="text/x-jsrender">
-        <button class="btn btn-default" data-id="{{:#data}}">{{:#index}}</button>
+        <button class="btn btn-default" data-id="{{:id}}">{{:player1.username}}||{{if player2}}{{:player2.username}}{{else}}-----{{/if}}</button>
     </script>
 
     <link rel="stylesheet" th:href="@{/css/home.css}"/>
@@ -143,7 +148,8 @@
     <div class="row">
         <button id="newGameBtn">Start new Game</button>
         <div id="lobbyContainer"></div>
-        <div id="tictactoeContainer"></div>
+        <div id="tictactoeContainer" style="max-width: 630px">
+        </div>
     </div>
 </div>
 </body>

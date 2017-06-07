@@ -75,6 +75,7 @@ public class GameController {
 
             if (!gameService.isMoveValid(game, request.getBigField(), request.getSmallField())) {
                 simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(loggedInPerson), "/queue/notValid", new Error("Move not Valid"));
+                return;
             }
             final int winner = gameService.checkForWin(game);
             switch (winner) {
@@ -86,7 +87,7 @@ public class GameController {
                     simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(game.getPlayer2()), "/queue/winner", payload);
                     return;
                 case 0:
-                    game.setNextValidQuadrant(request.getBigField());
+                    game.setNextValidQuadrant(gameService.getNextValidQuadrant(game.getBoard()[request.getSmallField()], request.getSmallField()));
                     final int[][] board = game.getBoard();
                     final boolean p1Turn = game.isP1Turn();
                     board[request.getBigField()][request.getSmallField()] = p1Turn ? 1 : -1;
@@ -100,6 +101,8 @@ public class GameController {
                     return;
                 default:
             }
+        } else {
+            simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(loggedInPerson), "/queue/notValid", new Error("Not your turn!"));
         }
     }
 
@@ -112,8 +115,9 @@ public class GameController {
     }
 
     @RequestMapping(value = "lobby", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<UUID> getLobby() {
-        return gameRepository.findAll().stream().map(AbstractIdEntity::getId).collect(Collectors.toList());
+    public List<Game> getLobby() {
+        final Person loggedInPerson = SecurityService.getLoggedInPerson();
+        return gameRepository.findByPlayer1OrPlayer2OrPlayer2IsNull(loggedInPerson, loggedInPerson);
     }
 
     @RequestMapping(value = "{id}/join", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -126,7 +130,9 @@ public class GameController {
         if (loggedInPerson != null && (loggedInPerson.equals(game.getPlayer1()) || loggedInPerson.equals(game.getPlayer2()))) {
             return game;
         }
-        game.setPlayer2(loggedInPerson);
+        if (game.getPlayer2() == null) {
+            game.setPlayer2(loggedInPerson);
+        }
         return gameRepository.save(game);
     }
 

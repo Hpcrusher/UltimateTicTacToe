@@ -52,4 +52,8 @@ public class GameService {
         return 0;
     }
 
+    public int getNextValidQuadrant(int[] board, int smallField) {
+        final int win = checkWin(board);
+        return win == 0 ? smallField : -1;
+    }
 }

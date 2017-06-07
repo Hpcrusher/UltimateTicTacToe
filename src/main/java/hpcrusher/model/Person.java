@@ -12,6 +12,7 @@ package hpcrusher.model;
 
 import org.hibernate.annotations.Proxy;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.UUID;
@@ -25,10 +26,20 @@ import java.util.UUID;
 @Proxy(lazy = false)
 public class Person extends AbstractIdEntity {
 
+    @Column(name = "username")
+    private String username;
+
 
     public Person() {
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public static Builder builder() {
         return new Builder();
@@ -36,15 +47,22 @@ public class Person extends AbstractIdEntity {
 
     public static class Builder {
         private UUID id = UUID.randomUUID();
+        private String username;
 
         public Builder setId(UUID id) {
             this.id = id;
             return this;
         }
 
+        public Builder setUsername(String username) {
+            this.username = username;
+            return this;
+        }
+
         public Person createPerson() {
             Person person = new Person();
             person.setId(id);
+            person.setUsername(username);
             return person;
         }
     }
