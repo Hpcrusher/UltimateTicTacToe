@@ -10,6 +10,8 @@
 
 package hpcrusher.web.controller;
 
+import hpcrusher.model.Person;
+import hpcrusher.services.SecurityService;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +30,15 @@ public class HomeController {
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getHomeAsHtml() {
-        return new ModelAndView("home");
+        final ModelAndView modelAndView = new ModelAndView("home");
+        final Person loggedInPerson = SecurityService.getLoggedInPerson();
+        if (loggedInPerson != null) {
+            final String username = loggedInPerson.getUsername();
+            if (username != null) {
+                modelAndView.addObject("username", username);
+            }
+        }
+        return modelAndView;
     }
 
     @RequestMapping(value="/impressum",method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)

@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 public class GameService {
 
     public boolean isMoveValid(Game game, int bigField, int smallField) {
+        if (checkWin(game.getBoard()[bigField]) != 0) {
+            return false;
+        }
         if (!(game.getNextValidQuadrant() != bigField && game.getNextValidQuadrant() != -1)) {
             if (game.getBoard()[bigField][smallField] == 0) {
                 return true;
@@ -53,6 +56,7 @@ public class GameService {
     }
 
     public int getNextValidQuadrant(int[] board, int smallField) {
+        //hier muss das Board erst aktualisiert werden !!!
         final int win = checkWin(board);
         return win == 0 ? smallField : -1;
     }

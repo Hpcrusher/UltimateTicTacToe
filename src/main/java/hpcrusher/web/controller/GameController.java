@@ -82,18 +82,19 @@ public class GameController {
                 case 1:
                 case -1:
                     game.setP1Winner(winner == 1);
+                    game = gameRepository.save(game);
                     Response payload = new Response(game);
                     simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(game.getPlayer1()), "/queue/winner", payload);
                     simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(game.getPlayer2()), "/queue/winner", payload);
                     return;
                 case 0:
-                    game.setNextValidQuadrant(gameService.getNextValidQuadrant(game.getBoard()[request.getSmallField()], request.getSmallField()));
                     final int[][] board = game.getBoard();
                     final boolean p1Turn = game.isP1Turn();
                     board[request.getBigField()][request.getSmallField()] = p1Turn ? 1 : -1;
+                    game.setNextValidQuadrant(gameService.getNextValidQuadrant(board[request.getSmallField()], request.getSmallField()));
                     game.setP1Turn(!p1Turn);
                     game = gameRepository.save(game);
-                    String username = nameResolverService.getUsername(getNextPlayer(game));
+                    String username = getNextPlayer(game).getUsername();
 
                     if (username != null) {
                         simpMessagingTemplate.convertAndSendToUser(username, "/queue/game", new Response(game));

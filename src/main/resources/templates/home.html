@@ -25,14 +25,36 @@
             var headers = {};
             headers[headerName] = token;
 
+            var username = /*[[${username}]]*/'';
+
             var $tictactoeContainer = $('#tictactoeContainer');
             var $lobbyContainer = $('#lobbyContainer');
+            var $playerName1 = $('#playerName1');
+            var $playerName2 = $('#playerName2');
+
+            var currentGame = null;
 
             var buildBoard = function (game) {
+                currentGame = game;
+                $playerName1.text(game.player1.username);
+                $playerName2.text(game.player2.username);
+                if(game.p1Turn) {
+                    $playerName1.css('background-color', 'LightGray');
+                } else {
+                    $playerName1.css('background-color', 'white');
+                }
+
+                if(!game.p1Turn) {
+                    $playerName2.css('background-color', 'LightGray');
+                } else {
+                    $playerName2.css('background-color', 'white');
+                }
+                $('#playerNames').show();
                 $tictactoeContainer.empty();
                 var render = $('#tictactoeBoard').render(game);
                 $tictactoeContainer.append(render);
                 $('.game-btn').click(function () {
+                    $(this).text(game.p1Turn?'X':'O');
                     WSC.sendMessage('/app/move', {
                         bigField: $(this).data('x'),
                         smallField: $(this).data('y'),
@@ -45,11 +67,14 @@
             };
 
             var winHandler = function (data) {
-
+                $.toast({
+                    text:
+                })
             };
 
             var errorHandling = function (data) {
-                $.notification({text: data})
+                $.notification({text: data});
+                buildBoard(currentGame);
             };
 
             function startNewGame() {
@@ -111,13 +136,13 @@
         /*]]>*/
     </script>
     <script id="tictactoeBoard" type="text/x-jsrender">
-        <div id="gameId" data-id="{{:id}}">
+        <div id="gameId" class="row" data-id="{{:id}}">
         {{for board}}
-            <div class="col-xs-4" style="max-width: 210px;{{if #index % 2 == 0}}background-color: #5F021F;{{else}}background-color: rgba(218, 129, 182, 0.75);{{/if}}">
+            <div class="col-xs-4" style="max-width:210px;{{if #index % 2 == 0}}background-color: Grey;{{else}}background-color: LightGrey;{{/if}}">
                 <div class="row">
                     {{for}}
                         <div class="col-xs-4 text-center" style="max-width: 70px;">
-                            <button class="game-btn btn btn-default" data-x="{{:#parent.getIndex()}}" data-y="{{:#index}}" style="width: 40px; margin-top: 4px;margin-bottom: 4px;background-color: white;" {{if #data != 0}}disabled="disabled"{{/if}}>
+                            <button class="game-btn btn btn-default" data-x="{{:#parent.getIndex()}}" data-y="{{:#index}}" style="width: 40px; margin-top: 8px;margin-bottom: 8px;{{if #parent.parent.index == #parent.parent.parent.parent.data.nextValidQuadrant && #data == 0}}background-color: LightGreen;{{/if}}" {{if #data != 0}}disabled="disabled"{{/if}}>
                                 {{if #data == 1}}
                                     <span>X</span>
                                 {{else #data == -1}}
@@ -131,6 +156,7 @@
                 </div>
             </div>
         {{/for}}
+        </div>
     </script>
     <script id="lobbyTemplate" type="text/x-jsrender">
         <button class="btn btn-default" data-id="{{:id}}">{{:player1.username}}||{{if player2}}{{:player2.username}}{{else}}-----{{/if}}</button>
@@ -148,7 +174,17 @@
     <div class="row">
         <button id="newGameBtn">Start new Game</button>
         <div id="lobbyContainer"></div>
-        <div id="tictactoeContainer" style="max-width: 630px">
+        <div id="playerNames" class="col-xs-12" style="display: none;">
+            <div class="row">
+                <div class="col-xs-4">
+                    <span id="playerName1"></span><span>(X)</span>
+                </div>
+                <div class="col-xs-4">
+                    <span id="playerName2"></span><span>(O)</span>
+                </div>
+            </div>
+        </div>
+        <div id="tictactoeContainer" class="col-xs-12" style="max-width: 630px">
         </div>
     </div>
 </div>
