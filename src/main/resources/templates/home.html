@@ -34,20 +34,12 @@
 
             var currentGame = null;
 
-            function toggleActivePlayer() {
-                if($playerName1.css('background-color') === 'white') {
-                    $playerName1.css('background-color', 'LightGray');
-                    $playerName2.css('background-color', 'white');
-                } else {
-                    $playerName1.css('background-color', 'white');
-                    $playerName2.css('background-color', 'LightGray');
-                }
-            }
-            
             var buildBoard = function (game) {
                 currentGame = game;
                 $playerName1.text(game.player1.username);
-                $playerName2.text(game.player2.username);
+                if (game.player2) {
+                    $playerName2.text(game.player2.username);
+                }
                 if(game.p1Turn) {
                     $playerName1.css('background-color', 'LightGray');
                     $playerName2.css('background-color', 'white');
@@ -61,7 +53,6 @@
                 $tictactoeContainer.append(render);
                 $('.game-btn').click(function () {
                     $(this).text(game.p1Turn?'X':'O');
-                    toggleActivePlayer();
                     WSC.sendMessage('/app/move', {
                         bigField: $(this).data('x'),
                         smallField: $(this).data('y'),
@@ -69,7 +60,8 @@
                     });
                     $tictactoeContainer.find('button').each(function () {
                         $(this).prop('disabled', true);
-                    })
+                    });
+                    toogleActivePlayer();
                 });
             };
 
@@ -78,6 +70,18 @@
                     text: game.winner ? game.player1.username + ' hat gewonnen!': game.player2.username + ' hat gewonnen!'
                 })
             };
+
+            function toogleActivePlayer() {
+                if ($playerName1 && $playerName2) {
+                    if($playerName1.css('background-color') === 'white') {
+                        $playerName1.css('background-color', 'LightGray');
+                        $playerName2.css('background-color', 'white');
+                    } else {
+                        $playerName1.css('background-color', 'white');
+                        $playerName2.css('background-color', 'LightGray');
+                    }
+                }
+            }
 
             var errorHandling = function (data) {
                 $.notification({text: data});

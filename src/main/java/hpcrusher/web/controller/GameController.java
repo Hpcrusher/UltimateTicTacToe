@@ -93,7 +93,8 @@ public class GameController {
                     game.setNextValidQuadrant(gameService.getNextValidQuadrant(board[request.getSmallField()], request.getSmallField()));
                     game.setP1Turn(!p1Turn);
                     game = gameRepository.save(game);
-                    String username = getNextPlayer(game).getUsername();
+                    final Person nextPlayer = getNextPlayer(game);
+                    String username = nextPlayer != null ? nextPlayer.getUsername() : null;
 
                     if (username != null) {
                         simpMessagingTemplate.convertAndSendToUser(username, "/queue/game", new Response(game));
@@ -117,7 +118,7 @@ public class GameController {
     @RequestMapping(value = "lobby", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Game> getLobby() {
         final Person loggedInPerson = SecurityService.getLoggedInPerson();
-        return gameRepository.findByPlayer1OrPlayer2OrPlayer2IsNullAndP1WinnerIsNull(loggedInPerson, loggedInPerson);
+        return gameRepository.findByPlayer1OrPlayer2OrPlayer2IsNull(loggedInPerson, loggedInPerson);
     }
 
     @RequestMapping(value = "{id}/join", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
