@@ -102,9 +102,15 @@
             </column>
             <column name="p1_turn" type="BOOLEAN"/>
             <column name="board" type="${type.string-1000}"/>
-            <column name="next_valid_quadrant" type="${type.string-100}"/>
-            <column name="p1_winner" type="BOOLEAN"/>
+            <column name="next_valid_quadrant" type="${type.int}"/>
+            <column name="p1_winner" type="${type.int}"/>
         </createTable>
+    </changeSet>
+
+    <changeSet id="1.0-7" author="DAL">
+        <addColumn tableName="game">
+            <column name="won_quadrants" type="${type.string-100}"/>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

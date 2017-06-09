@@ -25,6 +25,9 @@ public class Game extends AbstractIdEntity {
     @Column(name = "board")
     private int[][] board;
 
+    @Column(name = "won_quadrants")
+    private int[] wonQuadrants;
+
     @Column(name = "p1_turn")
     private boolean p1Turn;
 
@@ -58,6 +61,18 @@ public class Game extends AbstractIdEntity {
         this.board = board;
     }
 
+    public int[] getWonQuadrants() {
+        return wonQuadrants;
+    }
+
+    public void setWonQuadrants(int[] wonQuadrants) {
+        if (wonQuadrants == null) {
+            this.wonQuadrants = new int[9];
+        } else {
+            this.wonQuadrants = wonQuadrants;
+        }
+    }
+
     public boolean isP1Turn() {
         return p1Turn;
     }
@@ -78,12 +93,12 @@ public class Game extends AbstractIdEntity {
         this.nextValidQuadrant = nextValidQuadrant;
     }
 
-    public Boolean isP1Winner() {
-        return p1Winner;
-    }
-
     public void setP1Winner(Boolean p1Winner) {
         this.p1Winner = p1Winner;
+    }
+
+    public Boolean getP1Winner() {
+        return p1Winner;
     }
 
     public static final class GameBuilder {
@@ -91,6 +106,7 @@ public class Game extends AbstractIdEntity {
         private Person player1;
         private Person player2;
         private int[][] board;
+        private int[] wonQuadrants;
         private boolean p1Turn;
         private Boolean p1Winner;
 
@@ -127,10 +143,16 @@ public class Game extends AbstractIdEntity {
             return this;
         }
 
+        public GameBuilder withWonQuadrants(int[] wonQuadrants) {
+            this.wonQuadrants = wonQuadrants;
+            return this;
+        }
+
         public Game build() {
             Game game = new Game();
             game.setId(id);
             game.setBoard(board);
+            game.setWonQuadrants(wonQuadrants);
             game.setPlayer1(player1);
             game.setPlayer2(player2);
             game.setP1Turn(p1Turn);

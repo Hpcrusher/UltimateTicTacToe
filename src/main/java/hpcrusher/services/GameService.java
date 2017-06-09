@@ -1,7 +1,6 @@
 package hpcrusher.services;
 
 import hpcrusher.model.Game;
-import hpcrusher.model.Person;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,14 +22,16 @@ public class GameService {
     }
 
     public int checkForWin(Game game) {
-        int[] wins = new int[9];
+        int[] wonQuadrants = game.getWonQuadrants();
         for (int i = 0; i < 9; i++) {
-            wins[i] = checkWin(game.getBoard()[i]);
+            if (wonQuadrants[i] == 0) {
+                wonQuadrants[i] = checkWin(game.getBoard()[i]);
+            }
         }
-        return checkWin(wins);
+        return checkWin(wonQuadrants);
     }
 
-    private int checkWin(int[] board) {
+    private int checkWin(final int[] board) {
         if (board.length != 9) {
             throw new RuntimeException();
         }
@@ -59,8 +60,7 @@ public class GameService {
         return 0;
     }
 
-    public int getNextValidQuadrant(int[] board, int smallField) {
-        //hier muss das Board erst aktualisiert werden !!!
+    public int getNextValidQuadrant(final int[] board, int smallField) {
         final int win = checkWin(board);
         return win == 0 ? smallField : -1;
     }

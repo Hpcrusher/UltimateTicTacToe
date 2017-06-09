@@ -66,6 +66,10 @@
             };
 
             var winHandler = function (game) {
+                buildBoard(game);
+                $tictactoeContainer.find('button').each(function () {
+                    $(this).prop('disabled', true);
+                });
                 $.toast({
                     text: game.winner ? game.player1.username + ' hat gewonnen!': game.player2.username + ' hat gewonnen!'
                 })
@@ -89,6 +93,7 @@
             };
 
             function startNewGame() {
+                $('#newGameBtn').fadeOut();
                 CO.post({
                     url: newGameUrl,
                     success: function (game) {
@@ -99,13 +104,14 @@
             }
 
             function joinGame($btn) {
+                $('#newGameBtn').fadeOut();
                 CO.post({
                     url: joinGameUrl.replace('{id}', $btn.data('id')),
                     success: function (game) {
                         buildBoard(game);
                         establishConnections();
                     }
-                })
+                });
             }
 
             function establishConnections() {
@@ -150,20 +156,26 @@
         <div id="gameId" class="row" data-id="{{:id}}">
         {{for board}}
             <div class="col-xs-4" style="max-width:210px;{{if #index % 2 == 0}}background-color: Grey;{{else}}background-color: LightGrey;{{/if}}">
-                <div class="row">
-                    {{for}}
-                        <div class="col-xs-4 text-center" style="max-width: 70px;">
-                            <button class="game-btn btn btn-default" data-x="{{:#parent.getIndex()}}" data-y="{{:#index}}" style="width: 40px; margin-top: 8px;margin-bottom: 8px;{{if #parent.parent.index == #parent.parent.parent.parent.data.nextValidQuadrant && #data == 0}}background-color: LightGreen;{{/if}}" {{if #data != 0}}disabled="disabled"{{/if}}>
-                                {{if #data == 1}}
-                                    <span>X</span>
-                                {{else #data == -1}}
-                                    <span>O</span>
-                                {{else #data == 0}}
-                                    <span>-</span>
-                                {{/if}}
-                            </button>
-                        </div>
-                    {{/for}}
+                <div class="row text-center">
+                    {{if #parent.parent.data.wonQuadrants[#index] == 0}}
+                        {{for}}
+                            <div class="col-xs-4 text-center" style="max-width: 70px;">
+                                <button class="game-btn btn btn-default" data-x="{{:#parent.getIndex()}}" data-y="{{:#index}}" style="width: 40px; margin-top: 8px;margin-bottom: 8px;{{if (#parent.getIndex() == #parent.parent.parent.parent.parent.data.nextValidQuadrant && #data == 0) || #parent.parent.parent.parent.parent.data.nextValidQuadrant == -1}}background-color: LightGreen;{{/if}}" {{if #data != 0}}disabled="disabled"{{/if}}>
+                                    {{if #data == 1}}
+                                        <span>X</span>
+                                    {{else #data == -1}}
+                                        <span>O</span>
+                                    {{else #data == 0}}
+                                        <span>-</span>
+                                    {{/if}}
+                                </button>
+                            </div>
+                        {{/for}}
+                    {{else #parent.parent.data.wonQuadrants[#index] == 1}}
+                        <span style="font-size: 105px;">X</span>
+                    {{else #parent.parent.data.wonQuadrants[#index] == -1}}
+                        <span style="font-size: 105px;">O</span>
+                    {{/if}}
                 </div>
             </div>
         {{/for}}
@@ -183,7 +195,7 @@
         </div>
     </div>
     <div class="row">
-        <button id="newGameBtn">Start new Game</button>
+        <button id="newGameBtn" th:text="#{home.newGame}">Start new Game</button>
         <div id="lobbyContainer"></div>
         <div id="playerNames" class="col-xs-12" style="display: none;">
             <div class="row">
