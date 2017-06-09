@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * @author David Liebl
@@ -118,7 +117,7 @@ public class GameController {
     @RequestMapping(value = "lobby", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Game> getLobby() {
         final Person loggedInPerson = SecurityService.getLoggedInPerson();
-        return gameRepository.findByPlayer1OrPlayer2OrPlayer2IsNull(loggedInPerson, loggedInPerson);
+        return gameRepository.findByPlayer1OrPlayer2OrPlayer2IsNullAndP1WinnerIsNull(loggedInPerson, loggedInPerson);
     }
 
     @RequestMapping(value = "{id}/join", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

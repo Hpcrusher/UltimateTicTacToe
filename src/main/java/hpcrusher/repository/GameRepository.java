@@ -13,6 +13,6 @@ import java.util.UUID;
  */
 public interface GameRepository extends JpaRepository<Game, UUID>, JpaSpecificationExecutor<Game> {
 
-    List<Game> findByPlayer1OrPlayer2OrPlayer2IsNull(Person player1, Person player2);
+    List<Game> findByPlayer1OrPlayer2OrPlayer2IsNullAndP1WinnerIsNull(Person player1, Person player2);
 
 }
