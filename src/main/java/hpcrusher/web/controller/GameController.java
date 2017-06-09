@@ -84,7 +84,7 @@ public class GameController {
             switch (winner) {
                 case 1:
                 case -1:
-                    game.setP1Winner(winner == 1);
+                    game.setP1Winner(winner);
                     game = gameRepository.save(game);
                     Response payload = new Response(game);
                     simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(game.getPlayer1()), "/queue/winner", payload);

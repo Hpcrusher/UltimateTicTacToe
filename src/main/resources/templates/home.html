@@ -71,7 +71,7 @@
                     $(this).prop('disabled', true);
                 });
                 $.toast({
-                    text: game.winner ? game.player1.username + ' hat gewonnen!': game.player2.username + ' hat gewonnen!'
+                    text: game.winner === 1 ? game.player1.username + ' hat gewonnen!': (game.winner === -1? game.player2.username + ' hat gewonnen!' : 'Unentschieden!')
                 })
             };
 

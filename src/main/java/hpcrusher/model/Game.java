@@ -35,7 +35,7 @@ public class Game extends AbstractIdEntity {
     private int nextValidQuadrant = -1;
 
     @Column(name = "p1_winner")
-    private Boolean p1Winner;
+    private int winner;
 
     public Person getPlayer1() {
         return player1;
@@ -93,12 +93,12 @@ public class Game extends AbstractIdEntity {
         this.nextValidQuadrant = nextValidQuadrant;
     }
 
-    public void setP1Winner(Boolean p1Winner) {
-        this.p1Winner = p1Winner;
+    public void setP1Winner(int winner) {
+        this.winner = winner;
     }
 
-    public Boolean getP1Winner() {
-        return p1Winner;
+    public int getWinner() {
+        return winner;
     }
 
     public static final class GameBuilder {
@@ -108,7 +108,7 @@ public class Game extends AbstractIdEntity {
         private int[][] board;
         private int[] wonQuadrants;
         private boolean p1Turn;
-        private Boolean p1Winner;
+        private int winner;
 
         private GameBuilder() {
         }
@@ -138,8 +138,8 @@ public class Game extends AbstractIdEntity {
             return this;
         }
 
-        public GameBuilder withP1Winner(Boolean p1Winner) {
-            this.p1Winner = p1Winner;
+        public GameBuilder withWinner(int winner) {
+            this.winner = winner;
             return this;
         }
 
@@ -156,7 +156,7 @@ public class Game extends AbstractIdEntity {
             game.setPlayer1(player1);
             game.setPlayer2(player2);
             game.setP1Turn(p1Turn);
-            game.setP1Winner(p1Winner);
+            game.setP1Winner(winner);
             return game;
         }
     }
