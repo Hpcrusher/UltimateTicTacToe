@@ -77,7 +77,7 @@
 
             function toogleActivePlayer() {
                 if ($playerName1 && $playerName2) {
-                    if($playerName1.css('background-color') === 'white') {
+                    if($playerName1.css('background-color') === 'rgb(255,255,255)') {
                         $playerName1.css('background-color', 'LightGray');
                         $playerName2.css('background-color', 'white');
                     } else {
@@ -160,7 +160,7 @@
                     {{if #parent.parent.data.wonQuadrants[#index] == 0}}
                         {{for}}
                             <div class="col-xs-4 text-center" style="max-width: 70px;">
-                                <button class="game-btn btn btn-default" data-x="{{:#parent.getIndex()}}" data-y="{{:#index}}" style="width: 40px; margin-top: 8px;margin-bottom: 8px;{{if (#parent.getIndex() == #parent.parent.parent.parent.parent.data.nextValidQuadrant && #data == 0) || #parent.parent.parent.parent.parent.data.nextValidQuadrant == -1}}background-color: LightGreen;{{/if}}" {{if #data != 0}}disabled="disabled"{{/if}}>
+                                <button class="game-btn btn btn-default" data-x="{{:#parent.getIndex()}}" data-y="{{:#index}}" style="width: 40px; margin-top: 8px;margin-bottom: 8px;{{if (#parent.getIndex() == #parent.parent.parent.parent.parent.data.nextValidQuadrant || #parent.parent.parent.parent.parent.data.nextValidQuadrant == -1) && #data == 0}}background-color: LightGreen;{{/if}}" {{if #data != 0}}disabled="disabled"{{/if}}>
                                     {{if #data == 1}}
                                         <span>X</span>
                                     {{else #data == -1}}
@@ -195,8 +195,10 @@
         </div>
     </div>
     <div class="row">
-        <button id="newGameBtn" th:text="#{home.newGame}">Start new Game</button>
-        <div id="lobbyContainer"></div>
+        <div class="col-xs-12" style="margin-bottom: 10px;">
+            <button id="newGameBtn" th:text="#{home.newGame}">Start new Game</button>
+        </div>
+        <div id="lobbyContainer" class="col-xs-12"></div>
         <div id="playerNames" class="col-xs-12" style="display: none;">
             <div class="row">
                 <div class="col-xs-4">

@@ -53,6 +53,11 @@
                     <a class="navbar-brand" th:href="@{/}">Ultimate Tic Tac Toe</a>
                 </div>
                 <div  class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a th:href="@{/ranking}" th:text="#{ranking.title}"></a>
+                        </li>
+                    </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
                             <a class="dropdown-toggle headerPointer" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

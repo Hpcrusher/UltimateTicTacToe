@@ -70,7 +70,9 @@ public class GameController {
 
         final Person loggedInPerson = SecurityService.getLoggedInPerson();
 
-        if (loggedInPerson != null && (loggedInPerson.equals(game.getPlayer1()) && game.isP1Turn() || loggedInPerson.equals(game.getPlayer2()) && !game.isP1Turn())) {
+        final Person player1 = game.getPlayer1();
+        final Person player2 = game.getPlayer2();
+        if (loggedInPerson != null && (loggedInPerson.equals(player1) && game.isP1Turn() || loggedInPerson.equals(player2) && !game.isP1Turn())) {
 
             if (!gameService.isMoveValid(game, request.getBigField(), request.getSmallField())) {
                 simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(loggedInPerson), "/queue/notValid", new Error("Move not Valid"));
@@ -87,8 +89,17 @@ public class GameController {
                     game.setP1Winner(winner);
                     game = gameRepository.save(game);
                     Response payload = new Response(game);
-                    simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(game.getPlayer1()), "/queue/winner", payload);
-                    simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(game.getPlayer2()), "/queue/winner", payload);
+                    player1.countGamesPlayedUp();
+                    player2.countGamesPlayedUp();
+                    if (winner == 1) {
+                        player1.countWinsUp();
+                        player2.countLossesUp();
+                    } else {
+                        player1.countLossesUp();
+                        player2.countWinsUp();
+                    }
+                    simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(player1), "/queue/winner", payload);
+                    simpMessagingTemplate.convertAndSendToUser(nameResolverService.getUsername(player2), "/queue/winner", payload);
                     return;
                 case 0:
                     game.setNextValidQuadrant(gameService.getNextValidQuadrant(board[request.getSmallField()], request.getSmallField()));

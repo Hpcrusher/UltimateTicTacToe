@@ -11,13 +11,18 @@
 package hpcrusher.web.controller;
 
 import hpcrusher.model.Person;
+import hpcrusher.repository.PersonRepository;
 import hpcrusher.services.SecurityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 /**
  * @author David Liebl
@@ -27,6 +32,13 @@ import org.springframework.web.servlet.ModelAndView;
 @Transactional
 @RequestMapping(value = "/")
 public class HomeController {
+
+    private final PersonRepository personRepository;
+
+    @Autowired
+    public HomeController(PersonRepository personRepository) {
+        this.personRepository = personRepository;
+    }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getHomeAsHtml() {
@@ -38,6 +50,14 @@ public class HomeController {
                 modelAndView.addObject("username", username);
             }
         }
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "ranking", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getRankingAsHtml() {
+        ModelAndView modelAndView = new ModelAndView("ranking");
+        final List<Person> personList = personRepository.findAll(new Sort("wins", "username"));
+        modelAndView.addObject("persons", personList);
         return modelAndView;
     }
 

@@ -113,4 +113,12 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="1.0-8" author="DAL">
+        <addColumn tableName="person">
+            <column name="wins" type="${type.int}" defaultValueNumeric="0"/>
+            <column name="losses" type="${type.int}" defaultValueNumeric="0"/>
+            <column name="games_played" type="${type.int}" defaultValueNumeric="0"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -29,6 +29,14 @@ public class Person extends AbstractIdEntity {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "wins")
+    private Integer wins = 0;
+
+    @Column(name = "losses")
+    private Integer losses = 0;
+
+    @Column(name = "games_played")
+    private Integer gamesPlayed = 0;
 
     public Person() {
     }
@@ -41,6 +49,42 @@ public class Person extends AbstractIdEntity {
         this.username = username;
     }
 
+    public int getWins() {
+        return wins;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public void countWinsUp() {
+        this.wins++;
+    }
+
+    public int getLosses() {
+        return losses;
+    }
+
+    public void setLosses(int losses) {
+        this.losses = losses;
+    }
+
+    public void countLossesUp() {
+        this.losses++;
+    }
+
+    public int getGamesPlayed() {
+        return gamesPlayed;
+    }
+
+    public void setGamesPlayed(int gamesPlayed) {
+        this.gamesPlayed = gamesPlayed;
+    }
+
+    public void countGamesPlayedUp() {
+        this.gamesPlayed++;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -48,6 +92,9 @@ public class Person extends AbstractIdEntity {
     public static class Builder {
         private UUID id = UUID.randomUUID();
         private String username;
+        private int wins = 0;
+        private int losses = 0;
+        private int gamesPlayed = 0;
 
         public Builder setId(UUID id) {
             this.id = id;
@@ -59,10 +106,28 @@ public class Person extends AbstractIdEntity {
             return this;
         }
 
+        public Builder withWins(int wins) {
+            this.wins = wins;
+            return this;
+        }
+
+        public Builder withLosses(int losses) {
+            this.losses = losses;
+            return this;
+        }
+
+        public Builder withGamesPlayed(int gamesPlayed) {
+            this.gamesPlayed = gamesPlayed;
+            return this;
+        }
+
         public Person createPerson() {
             Person person = new Person();
             person.setId(id);
             person.setUsername(username);
+            person.setWins(wins);
+            person.setLosses(losses);
+            person.setGamesPlayed(gamesPlayed);
             return person;
         }
     }
