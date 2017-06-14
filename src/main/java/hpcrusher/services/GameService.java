@@ -35,7 +35,7 @@ public class GameService {
         if (board.length != 9) {
             throw new RuntimeException();
         }
-        for (int i = 0; i != 6; i+=3) {
+        for (int i = 0; i != 9; i+=3) {
             if (board[i] != 0) {
                 if (board[i] == board[i + 1] && board[i + 1] == board[i + 2]) {
                     return board[i];
